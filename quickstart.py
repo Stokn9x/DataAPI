@@ -38,7 +38,8 @@ def main():
         with open('token.json', 'w') as token:
             token.write(creds.to_json())
 
-def connect_To_Sheet():
+
+def connect_to_sheet():
     if os.path.exists('token.json'):
         creds = Credentials.from_authorized_user_file('token.json', SCOPES)
     service = build('sheets', 'v4', credentials=creds)
@@ -50,13 +51,20 @@ def connect_To_Sheet():
     values = result.get('values', [])
     return values
 
-def Data_Print():
-    Val = connect_To_Sheet()
-    print("Pistol win" , Val[20][18])
+
+class Data:
+    def __init__(self):
+        val = connect_to_sheet()
+        self.test1 = val[0][0]
+        self.test2 = val[20][18]
 
 
+def func():
+    return Data()
 
 
 if __name__ == '__main__':
     main()
-    Data_Print()
+    t = func()
+    print(t.test2, t.test1)
+
