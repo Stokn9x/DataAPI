@@ -21,7 +21,7 @@ def run_discord_bot():
     async def on_ready():
         print(f'{bot.user} is now running!')
         channel = bot.get_channel(1103348691466723399)
-        await channel.send(f'{bot.user} is now updated!')
+        #await channel.send(f'{bot.user} is now updated!')
 
 
     @bot.command(name='info')
@@ -52,35 +52,43 @@ def run_discord_bot():
 
 
     #TODO lav det om så der ikke bliver sendt 8 enkelt beskeder men som en samlet.
+
+
     @bot.command(name='map_pistol')
     async def pistol_maps(ctx):
-        await ctx.send(f'This is all data from your pistols')
-        await ctx.send(f'Ancient Overall win% [{t.ancient_pistol_overall[0]}] T side win% [{t.ancient_pistol_overall[1]}] CT side win% [{t.ancient_pistol_overall[2]}]')
-        await ctx.send(f'Inferno Overall win% [{t.inferno_pistol_overall[0]}] T side win% [{t.inferno_pistol_overall[1]}] CT side win% [{t.inferno_pistol_overall[2]}]')
-        await ctx.send(f'Nuke Overall win% [{t.nuke_pistol_overall[0]}] T side win% [{t.nuke_pistol_overall[1]}] CT side win% [{t.nuke_pistol_overall[2]}]')
-        await ctx.send(f'Vertigo Overall win% [{t.vertigo_pistol_overall[0]}] T side win% [{t.vertigo_pistol_overall[1]}] CT side win% [{t.vertigo_pistol_overall[2]}]')
-        await ctx.send(f'Overpass Overall win% [{t.overpass_pistol_overall[0]}] T side win% [{t.overpass_pistol_overall[1]}] CT side win% [{t.overpass_pistol_overall[2]}]')
-        await ctx.send(f'Mirage Overall win% [{t.mirage_pistol_overall[0]}] T side win% [{t.mirage_pistol_overall[1]}] CT side win% [{t.mirage_pistol_overall[2]}]')
-        await ctx.send(f'Anubis Overall win% [{t.anubis_pistol_overall[0]}] T side win% [{t.anubis_pistol_overall[1]}] CT side win% [{t.anubis_pistol_overall[2]}]')
+        await ctx.send(f'This is all data from your pistols\n '
+                        f'Ancient Overall win% [{t.ancient_pistol_overall[0]}] T side win% [{t.ancient_pistol_overall[1]}] CT side win% [{t.ancient_pistol_overall[2]}] \n'
+                        f'Inferno Overall win% [{t.inferno_pistol_overall[0]}] T side win% [{t.inferno_pistol_overall[1]}] CT side win% [{t.inferno_pistol_overall[2]}] \n'
+                        f'Nuke Overall win% [{t.nuke_pistol_overall[0]}] T side win% [{t.nuke_pistol_overall[1]}] CT side win% [{t.nuke_pistol_overall[2]}] \n'
+                        f'Vertigo Overall win% [{t.vertigo_pistol_overall[0]}] T side win% [{t.vertigo_pistol_overall[1]}] CT side win% [{t.vertigo_pistol_overall[2]}] \n'
+                        f'Overpass Overall win% [{t.overpass_pistol_overall[0]}] T side win% [{t.overpass_pistol_overall[1]}] CT side win% [{t.overpass_pistol_overall[2]}] \n'
+                        f'Mirage Overall win% [{t.mirage_pistol_overall[0]}] T side win% [{t.mirage_pistol_overall[1]}] CT side win% [{t.mirage_pistol_overall[2]}] \n'
+                        f'Anubis Overall win% [{t.anubis_pistol_overall[0]}] T side win% [{t.anubis_pistol_overall[1]}] CT side win% [{t.anubis_pistol_overall[2]}]')
 
     @bot.command(name='map_round')
     async def round_maps(ctx):
-        await ctx.send(f'This is all data from your rounds on all maps')
-        await ctx.send(f'Ancient Overall win% [{t.ancient_round_overall[0]}] T side win% [{t.ancient_round_overall[1]}] CT side win% [{t.ancient_round_overall[2]}]')
-        await ctx.send(f'Inferno Overall win% [{t.inferno_round_overall[0]}] T side win% [{t.inferno_round_overall[1]}] CT side win% [{t.inferno_round_overall[2]}]')
-        await ctx.send(f'Nuke Overall win% [{t.nuke_round_overall[0]}] T side win% [{t.nuke_round_overall[1]}] CT side win% [{t.nuke_round_overall[2]}]')
-        await ctx.send(f'Vertigo Overall win% [{t.vertigo_round_overall[0]}] T side win% [{t.vertigo_round_overall[1]}] CT side win% [{t.vertigo_round_overall[2]}]')
-        await ctx.send(f'Overpass Overall win% [{t.overpass_round_overall[0]}] T side win% [{t.overpass_round_overall[1]}] CT side win% [{t.overpass_round_overall[2]}]')
-        await ctx.send(f'Mirage Overall win% [{t.mirage_round_overall[0]}] T side win% [{t.mirage_round_overall[1]}] CT side win% [{t.mirage_round_overall[2]}]')
-        await ctx.send(f'Anubis Overall win% [{t.anubis_round_overall[0]}] T side win% [{t.anubis_round_overall[1]}] CT side win% [{t.anubis_round_overall[2]}]')
+        await ctx.send(f'This is all data from your rounds on all maps\n'
+                        f'Ancient Overall win% [{t.ancient_round_overall[0]}] T side win% [{t.ancient_round_overall[1]}] CT side win% [{t.ancient_round_overall[2]}] \n'
+                        f'Inferno Overall win% [{t.inferno_round_overall[0]}] T side win% [{t.inferno_round_overall[1]}] CT side win% [{t.inferno_round_overall[2]}] \n'
+                        f'Nuke Overall win% [{t.nuke_round_overall[0]}] T side win% [{t.nuke_round_overall[1]}] CT side win% [{t.nuke_round_overall[2]}] \n'
+                        f'Vertigo Overall win% [{t.vertigo_round_overall[0]}] T side win% [{t.vertigo_round_overall[1]}] CT side win% [{t.vertigo_round_overall[2]}] \n'
+                        f'Overpass Overall win% [{t.overpass_round_overall[0]}] T side win% [{t.overpass_round_overall[1]}] CT side win% [{t.overpass_round_overall[2]}] \n'
+                        f'Mirage Overall win% [{t.mirage_round_overall[0]}] T side win% [{t.mirage_round_overall[1]}] CT side win% [{t.mirage_round_overall[2]}] \n'
+                        f'Anubis Overall win% [{t.anubis_round_overall[0]}] T side win% [{t.anubis_round_overall[1]}] CT side win% [{t.anubis_round_overall[2]}]')
 
+    @bot.command(name='t_round')
+    async def t_round(ctx):
+        await ctx.send(f'This is the overall round win% for t side[{t.t_side_round_overall}]')
 
-        @bot.command(name='t_round')
-        async def t_round(ctx):
-            await ctx.send(f'This is the overall round win% for t side[{t.t_side_round_overall}]')
+    @bot.command(name='ct_round')
+    async def ct_round(ctx):
+        await ctx.send(f'This is the overall round win% for t side[{t.ct_side_round_overall}]')
 
-        @bot.command(name='ct_round')
-        async def ct_round(ctx):
-            await ctx.send(f'This is the overall round win% for t side[{t.ct_side_round_overall}]')
+    @bot.command(name='games')
+    async def game(ctx):
+        await ctx.send(f'You have played a total of [{t.games}] games \n'
+                        f'You have won a total of [{t.game_wins}] games \n'
+                        f'You have lost a total of [{t.game_loss}] games \n'
+                        f'You have a  win to loss ration of [{t.game_win_pro}]')
 
     bot.run(TOKEN)

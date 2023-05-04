@@ -29,6 +29,12 @@ class Data:
         self.t_side_round_overall = val[29][23]
         self.ct_side_round_overall = val[29][24]
 
+        #enkelt celle game wins / losses
+        self.games = val[26][29]
+        self.game_wins = val[26][30]
+        self.game_loss = val[26][31]
+        self.game_win_pro = val[26][32]
+
 
 def func():
     return Data()
