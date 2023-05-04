@@ -1,5 +1,6 @@
 import quickstart
-
+import Bot
 if __name__ == '__main__':
     quickstart.main()
-    quickstart.run_discord_bot()
+    Bot.run_discord_bot()
+
