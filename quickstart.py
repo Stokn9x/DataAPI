@@ -13,7 +13,7 @@ from googleapiclient.errors import HttpError
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 
 # The ID and range of a sample spreadsheet.
-SAMPLE_SPREADSHEET_ID = '1GmCP7PStzszbd31zNKqcVqv_QuN12LbI0UzJjNvl05M'
+SAMPLE_SPREADSHEET_ID = '1l2aXE0Lu3vcOXoFXKyiN6xrpofRsJrKyZpSHHFUNGOg'
 SAMPLE_RANGE_NAME = 'Results'
 
 
