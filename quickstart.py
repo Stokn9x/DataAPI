@@ -40,7 +40,7 @@ def main():
             token.write(creds.to_json())
 
 
-def connect_to_sheet():
+def connect_to_sheet(SAMPLE_SPREADSHEET_ID):
     if os.path.exists('token.json'):
         creds = Credentials.from_authorized_user_file('token.json', SCOPES)
     service = build('sheets', 'v4', credentials=creds)

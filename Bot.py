@@ -9,11 +9,9 @@ def run_discord_bot():
     intents.message_content = True
     intents.members = True
 
-    TOKEN = 'MTEwMzI3NTMzNTcxMTIwMzM4OQ.GUZTm6.26ZHc0dHBOk6z_9wPKq6yAqFdPCmRpRxbX5hJY'
+    TOKEN = 'MTEwMzI3NTMzNTcxMTIwMzM4OQ.G_HaDh.oCoZbYiANChGQ_upyzZiibsRIlX8MVJ37AMaiAGGG'
 
     bot = commands.Bot(command_prefix="!", intents=intents)
-
-
 
     @bot.event
     async def on_ready():
@@ -34,27 +32,36 @@ def run_discord_bot():
         embed.add_field(name="!t_round", value="Displays the overall win% of rounds on t side")
         embed.add_field(name="!ct_round", value="Displays the overall win% of round is ct side")
         embed.add_field(name="!games", value="Displays the overall win% of your games")
+        embed.add_field(name="!game_type", value="Displays the data of the game types u have played")
 
         await ctx.send(embed=embed)
 
     @bot.command(name='pistol')
     async def pistolOverall(ctx):
-        val = quickstart.connect_to_sheet()
+        channel = ctx.channel
+        channel_id = channel.id
+        val = quickstart.connect_to_sheet(data.spread_id(channel_id))
         await ctx.send(val[20][20])
 
     @bot.command(name='test')
     async def test(ctx):
-        val = quickstart.connect_to_sheet()
-        await ctx.send(val[20][20])
+        channel = ctx.channel
+        channel_id = channel.id
+        val = quickstart.connect_to_sheet(data.spread_id(channel_id))
+        print(val[37][20])
 
     @bot.command(name='t_pistol')
     async def pistol_t_side(ctx):
-        val = quickstart.connect_to_sheet()
+        channel = ctx.channel
+        channel_id = channel.id
+        val = quickstart.connect_to_sheet(data.spread_id(channel_id))
         await ctx.send(val[20][21])
 
     @bot.command(name='ct_pistol')
     async def pistol_ct_side(ctx):
-        val = quickstart.connect_to_sheet()
+        channel = ctx.channel
+        channel_id = channel.id
+        val = quickstart.connect_to_sheet(data.spread_id(channel_id))
         await ctx.send(val[20][22])
 
 
@@ -63,7 +70,9 @@ def run_discord_bot():
 
     @bot.command(name='map_pistol')
     async def pistol_maps(ctx):
-        val = quickstart.connect_to_sheet()
+        channel = ctx.channel
+        channel_id = channel.id
+        val = quickstart.connect_to_sheet(data.spread_id(channel_id))
         await ctx.send(f'This is all data from your pistols\n '
                         f'Ancient Overall win% [{val[25][20]}] T side win% [{val[25][21]}] CT side win% [{val[25][22]}] \n'
                         f'Inferno Overall win% [{val[26][20]}] T side win% [{val[26][21]}] CT side win% [{val[26][22]}] \n'
@@ -75,7 +84,9 @@ def run_discord_bot():
 
     @bot.command(name='map_round')
     async def round_maps(ctx):
-        val = quickstart.connect_to_sheet()
+        channel = ctx.channel
+        channel_id = channel.id
+        val = quickstart.connect_to_sheet(data.spread_id(channel_id))
         await ctx.send(f'This is all data from your rounds on all maps\n'
                         f'Ancient Overall win% [{val[19][26]}] T side win% [{val[19][27]}] CT side win% [{val[19][28]}] \n'
                         f'Inferno Overall win% [{val[20][26]}] T side win% [{val[20][27]}] CT side win% [{val[20][28]}] \n'
@@ -87,20 +98,37 @@ def run_discord_bot():
 
     @bot.command(name='t_round')
     async def t_round(ctx):
-        val = quickstart.connect_to_sheet()
+        channel = ctx.channel
+        channel_id = channel.id
+        val = quickstart.connect_to_sheet(data.spread_id(channel_id))
         await ctx.send(f'This is the overall round win% for t side[{val[29][25]}]')
 
     @bot.command(name='ct_round')
     async def ct_round(ctx):
-        val = quickstart.connect_to_sheet()
+        channel = ctx.channel
+        channel_id = channel.id
+        val = quickstart.connect_to_sheet(data.spread_id(channel_id))
         await ctx.send(f'This is the overall round win% for t side[{val[29][26]}]')
 
     @bot.command(name='games')
     async def game(ctx):
-        val = quickstart.connect_to_sheet()
+        channel = ctx.channel
+        channel_id = channel.id
+        val = quickstart.connect_to_sheet(data.spread_id(channel_id))
         await ctx.send(f'You have played a total of [{val[26][31]}] games \n'
                         f'You have won a total of [{val[26][32]}] games \n'
                         f'You have lost a total of [{val[26][33]}] games \n'
                         f'You have a  win to loss ration of [{val[26][34]}]')
+
+    @bot.command(name='game_type')
+    async def game_type(ctx):
+        channel = ctx.channel
+        channel_id = channel.id
+        val = quickstart.connect_to_sheet(data.spread_id(channel_id))
+        await ctx.send(f'You have played a total of [{val[37][20]}] faceit games, and u have won a total of [{val[37][21]}]\n' 
+                       f'You have played a total of [{val[38][20]}] scrim games, and u have won a total of [{val[38][21]}]\n'
+                       f'You have played a total of [{val[39][20]}] metal games, and u have won a total of [{val[39][21]}]\n'
+                       f'You have played a total of [{val[40][20]}] yousee games, and u have won a total of [{val[40][21]}]\n'
+                       f'You have played a total of [{val[41][20]}] power games, and u have won a total of [{val[41][21]}]\n')
 
     bot.run(TOKEN)
