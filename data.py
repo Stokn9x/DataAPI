@@ -12,3 +12,6 @@ def spread_id(channel_id):
 
     elif channel_id == 1107573013651660820: #AB
         return '1IRv0QicOU044COgTk0ACK__u8EjOhim3lnfRZthdlaM'
+
+    elif channel_id == 1103348691466723399: #Cepter
+        return '1HuKfTI0KKPvdlxY5MX9BIzlSExS2kLzJ7BdW739vbKQ'

@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 import quickstart
 import data
 
+
 def run_discord_bot():
     intents = discord.Intents.default()
     intents.message_content = True
@@ -13,12 +14,19 @@ def run_discord_bot():
 
     bot = commands.Bot(command_prefix="!", intents=intents)
 
+
     @bot.event
     async def on_ready():
         print(f'{bot.user} is now running!')
-        channel = bot.get_channel(1103348691466723399)
-        #await channel.send(f'{bot.user} is now updated!')
+        try:
+            synced = await bot.tree.sync()
+            print(f'Synced {len(synced)} command(s)')
+        except Exception as e:
+            print(e)
 
+    @bot.tree.command(name='hej')
+    async def hi(interaction: discord.Interaction):
+        await interaction.response.send_message(f"Hey {interaction.user.mention}! this is a slash command")
 
     @bot.command(name='info')
     async def infoo(ctx):
@@ -33,6 +41,7 @@ def run_discord_bot():
         embed.add_field(name="!ct_round", value="Displays the overall win% of round is ct side")
         embed.add_field(name="!games", value="Displays the overall win% of your games")
         embed.add_field(name="!game_type", value="Displays the data of the game types u have played")
+        embed.add_field(name="!stats", value="Displays the player data")
 
         await ctx.send(embed=embed)
 
@@ -41,15 +50,30 @@ def run_discord_bot():
         channel = ctx.channel
         channel_id = channel.id
         val = quickstart.connect_to_sheet(data.spread_id(channel_id))
-        await ctx.send(val[20][20])
+        embed = discord.Embed(title='Overall pistol wins', description=f'You have won [{val[20][20]}] of your pistol rounds')
+        await ctx.send(embed=embed)
 
     @bot.command(name='test')
     async def test(ctx):
         channel = ctx.channel
         channel_id = channel.id
         val = quickstart.connect_to_sheet(data.spread_id(channel_id))
-        print(val[37][20])
+        embed = discord.Embed(title='Test', description='hejsa')
+        await ctx.send(embed=embed)
+        print(val[36][26])
 
+    @bot.command(name='stats')
+    async def stats(ctx):
+        channel = ctx.channel
+        channel_id = channel.id
+        val = quickstart.connect_to_sheet(data.spread_id(channel_id))
+        author = ctx.author
+        embed = discord.Embed(title='Player stats', description=f'Hi, {author.mention} nu skal du bare høre hvordan du har klaret dig \n'
+                       f'Din AVG kills er [{val[36][26]}] \n'
+                       f'Din AVG aissist er [{val[37][26]}] \n'
+                       f'Din AVG deaths er [{val[38][26]}] \n'
+                       f'og din K/D er [{val[39][26]}]')
+        await ctx.send(embed=embed)
     @bot.command(name='t_pistol')
     async def pistol_t_side(ctx):
         channel = ctx.channel
@@ -108,7 +132,7 @@ def run_discord_bot():
         channel = ctx.channel
         channel_id = channel.id
         val = quickstart.connect_to_sheet(data.spread_id(channel_id))
-        await ctx.send(f'This is the overall round win% for t side[{val[29][26]}]')
+        await ctx.send(f'This is the overall round win% for ct side[{val[29][26]}]')
 
     @bot.command(name='games')
     async def game(ctx):
