@@ -18,3 +18,11 @@ def spread_id(channel_id):
 
     except:
         print("channel not working")
+
+def stats_own(id):
+    a = 'V'
+    b = 'W'
+    c = 'X'
+    list = [a+str(62+id), b+str(62+id), c+str(62+id)]
+
+    return list

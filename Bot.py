@@ -10,7 +10,7 @@ def run_discord_bot():
     intents.message_content = True
     intents.members = True
 
-    TOKEN = 'MTEwMzI3NTMzNTcxMTIwMzM4OQ.G_HaDh.oCoZbYiANChGQ_upyzZiibsRIlX8MVJ37AMaiAGGG'
+    TOKEN = 'MTEwMzI3NTMzNTcxMTIwMzM4OQ.G_HaDh.oCoZbYiANChGQ_upyzZiibsRIlX8MVJ37AMaiAggg'
 
     bot = commands.Bot(command_prefix="!", intents=intents)
 
@@ -43,6 +43,7 @@ def run_discord_bot():
         embed.add_field(name="!game_type", value="Displays the data of the game types u have played")
         embed.add_field(name="!stats", value="Displays the player data")
         embed.add_field(name="!match [Match id]", value="Displays the given match")
+        embed.add_field(name="!stats_in [Match id] [kills] [assist] [deaths]", value="Saves player stats to the sheet")
 
         await interaction.response.send_message(embed=embed)
 
@@ -61,7 +62,24 @@ def run_discord_bot():
         val = quickstart.connect_to_sheet(data.spread_id(channel_id))
         embed = discord.Embed(title='Test', description='hejsa')
         await ctx.send(embed=embed)
-        print(val[2][0])
+        print(val[62][21], val[62][22], val[62][23])
+
+    @bot.command(name="stats_in")
+    async def stats_in(ctx, id:  int, arg1: int, arg2: int, arg3: int):
+        channel = ctx.channel
+        channel_id = channel.id
+        val = quickstart.connect_to_sheet(data.spread_id(channel_id))
+        own_stats = [arg1,arg2,arg3]
+        try:
+            if int(val[62 + (id)][21]) != None or int(val[62 + (id)][22]) != None or int(val[62 + (id)][23]) != None:
+                embed = discord.Embed(title='Error', colour=0xe91e63,description='Some of the cells have been filled out, check if the match id is correct')
+                await ctx.send(embed=embed)
+        except:
+            for i in range(len(data.stats_own(id))):
+                quickstart.write_to_sheet(data.spread_id(channel_id), data.stats_own(id)[i], own_stats[i])
+            quickstart.write_to_sheet(data.spread_id(channel_id), 'y'+str(62+id), int(arg1) / int(arg3))
+            embed = discord.Embed(title='Stats inputet', colour=0x2ecc71, description='Your stats have been saved :)')
+            await ctx.send(embed=embed)
 
     @bot.command(name='match')
     async def match_show(ctx, arg1: int):

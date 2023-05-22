@@ -10,7 +10,7 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
 # If modifying these scopes, delete the file token.json.
-SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
+SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
 # The ID and range of a sample spreadsheet.
 SAMPLE_SPREADSHEET_ID = '1l2aXE0Lu3vcOXoFXKyiN6xrpofRsJrKyZpSHHFUNGOg'
@@ -51,3 +51,26 @@ def connect_to_sheet(SAMPLE_SPREADSHEET_ID):
                                     range=SAMPLE_RANGE_NAME).execute()
     values = result.get('values', [])
     return values
+
+
+def write_to_sheet(spreadsheet_id, cell, value):
+    if os.path.exists('token.json'):
+        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+    service = build('sheets', 'v4', credentials=creds)
+
+    # Create the request body
+    body = {
+        'values': [[value]]
+    }
+
+    # Write to a specific cell
+    try:
+        service.spreadsheets().values().update(
+            spreadsheetId=spreadsheet_id,
+            range=SAMPLE_RANGE_NAME + '!' + cell,
+            valueInputOption='RAW',
+            body=body
+        ).execute()
+        print('Value written successfully.')
+    except HttpError as e:
+        print('An error occurred:', e)
