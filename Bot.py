@@ -3,6 +3,7 @@ from discord.ext import commands
 from dotenv import load_dotenv
 import quickstart
 import data
+import asyncio
 
 
 def run_discord_bot():
@@ -10,7 +11,7 @@ def run_discord_bot():
     intents.message_content = True
     intents.members = True
 
-    TOKEN = 'MTEwMzI3NTMzNTcxMTIwMzM4OQ.G_HaDh.oCoZbYiANChGQ_upyzZiibsRIlX8MVJ37AMaiAggg'
+    TOKEN = 'MTEwMzI3NTMzNTcxMTIwMzM4OQ.G_HaDh.oCoZbYiANChGQ_upyzZiibsRIlX8MVJ37AMaiAgg'
 
     bot = commands.Bot(command_prefix="!", intents=intents)
 
@@ -24,9 +25,68 @@ def run_discord_bot():
         except Exception as e:
             print(e)
 
-    @bot.tree.command(name='hej')
-    async def hi(interaction: discord.Interaction):
-        await interaction.response.send_message(f"Hey {interaction.user.mention}! this is a slash command")
+
+    @bot.command(name='opret_kamp')
+    async def opret(ctx):
+        channel = ctx.channel
+        channel_id = channel.id
+        val = quickstart.connect_to_sheet(data.spread_id(channel_id))
+        # Send initial message
+        embed = discord.Embed(title='Hi plz read the following msg', description='Here are the help commands. To help with elustrating how the command should look like. \n'
+                                                                                 'here is a eksampel. 15/05/2023 1 randoms 2 L 3-12 2-4 1 1. \n'
+                                                                                 'So it work be like this \n'
+                                                                                 '[date] [Game_Type] [Opponets] [Map] [Win/Loss] [T-rounds] [CT-rounds] [T pistol] [CT pistol]')
+        embed.add_field(name='Game type', value='1 = faceit \n 2 = scrim \n 3 = metal \n 4 = yousee \n 5 = power')
+        embed.add_field(name='Map type', value='1 = Ancient \n 2 = Inferno \n 3 = Nuke \n 4 = Vertigo \n 5 = Overpass \n 6 = Mirage \n 7 = anubis')
+        await ctx.send(embed=embed)
+        def check(message):
+            return message.author == ctx.author and message.channel == ctx.channel
+
+        try:
+            i = 0
+            while i == 0:
+                # Wait for the user's response
+                msg = await bot.wait_for('message', check=check, timeout=60)
+
+                # Access the variables from the user's response
+                variables = msg.content.split()
+
+                if len(variables) >= 9:
+                    variable1 = variables[0]
+                    variable2 = variables[1]
+                    variable3 = variables[2]
+                    variable4 = variables[3]
+                    variable5 = variables[4]
+                    variable6 = variables[5] #
+                    variable7 = variables[6] #
+                    variable8 = variables[7]
+                    variable9 = variables[8]
+
+                    list1 = variable6.split('-')
+                    list2 = variable7.split('-')
+
+                    variable10 = list1[0]
+                    variable11 = list1[1]
+                    variable12 = list2[0]
+                    variable13 = list2[1]
+                    # Call your function using the variables
+                    # your_function(variable1, variable2)
+                    embed = discord.Embed(title='Thesse are the variables i got', description=f"Variables received: {variable1}, {variable2}, {variable3}, {variable4}, {variable5}, {variable6}, {variable7}, {variable8}, {variable9} \n"
+                                                                                              f"If the valuse are correct type [yes], or if they are incorrect type [no]")
+                    await ctx.send(embed=embed)
+                    msg_check = await bot.wait_for('message', check=check)
+                    if msg_check.content == 'yes' or msg_check.content == 'Yes':
+                        embed = discord.Embed(title='Match saved', description='The data have been processed.')
+                        await ctx.send(embed=embed)
+                        i = 1
+                    elif msg_check.content == 'no' or msg_check.content == 'No':
+                        embed = discord.Embed(title='Data not processed', colour=0xe91e63,description='Plz try writing the values again')
+                        await ctx.send(embed=embed)
+                else:
+                    await ctx.send("Please provide all of the values, before clicking enter")
+        except asyncio.TimeoutError:
+            await ctx.send("Timeout: Command cancelled.")
+
 
     @bot.tree.command(name='info', description='Displays all the commands you can use')
     async def info(interaction: discord.Interaction):
@@ -78,7 +138,7 @@ def run_discord_bot():
             for i in range(len(data.stats_own(id))):
                 quickstart.write_to_sheet(data.spread_id(channel_id), data.stats_own(id)[i], own_stats[i])
             quickstart.write_to_sheet(data.spread_id(channel_id), 'y'+str(62+id), int(arg1) / int(arg3))
-            embed = discord.Embed(title='Stats inputet', colour=0x2ecc71, description='Your stats have been saved :)')
+            embed = discord.Embed(title='Stats inputet', colour=0x2ecc71, description=f'Your stats have been saved for match [{id}] :)')
             await ctx.send(embed=embed)
 
     @bot.command(name='match')
