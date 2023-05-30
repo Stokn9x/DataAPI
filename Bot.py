@@ -11,7 +11,7 @@ def run_discord_bot():
     intents.message_content = True
     intents.members = True
 
-    TOKEN = 'MTEwMzI3NTMzNTcxMTIwMzM4OQ.G_HaDh.oCoZbYiANChGQ_upyzZiibsRIlX8MVJ37AMaiAgg'
+    TOKEN = 'MTEwMzI3NTMzNTcxMTIwMzM4OQ.G_HaDh.oCoZbYiANChGQ_upyzZiibsRIlX8MVJ37AMaiAGG'
 
     bot = commands.Bot(command_prefix="!", intents=intents)
 
@@ -55,7 +55,8 @@ def run_discord_bot():
                     variable1 = variables[0]
                     variable2 = variables[1]
                     variable3 = variables[2]
-                    variable4 = variables[3]
+                    variable4 = variables[3] # map convert
+                    variable4 = data.maps(variables[3])
                     variable5 = variables[4]
                     variable6 = variables[5] #
                     variable7 = variables[6] #
@@ -69,6 +70,7 @@ def run_discord_bot():
                     variable11 = list1[1]
                     variable12 = list2[0]
                     variable13 = list2[1]
+                    match_stats = [variable1, variable2, variable3, variable4, variable5, variable10, variable11, variable12, variable13, variable8, variable9]
                     # Call your function using the variables
                     # your_function(variable1, variable2)
                     embed = discord.Embed(title='Thesse are the variables i got', description=f"Variables received: {variable1}, {variable2}, {variable3}, {variable4}, {variable5}, {variable6}, {variable7}, {variable8}, {variable9} \n"
@@ -78,6 +80,21 @@ def run_discord_bot():
                     if msg_check.content == 'yes' or msg_check.content == 'Yes':
                         embed = discord.Embed(title='Match saved', description='The data have been processed.')
                         await ctx.send(embed=embed)
+                        x = 0
+                        t = 0
+                        while x == 0:
+                            if int(val[2+t][0]) != t + 1: #Dette virker ikke skal laves om
+                                print("hej")
+                                quickstart.write_to_sheet(data.spread_id(channel_id), 'A'+str(3+t), 3+t)
+                                for i in range(len(match_stats)):
+
+                                    quickstart.write_to_sheet(data.spread_id(channel_id), data.match_stats(t)[i],match_stats[i])
+
+                                x = 1
+
+                            else:
+                                t = t + 1
+
                         i = 1
                     elif msg_check.content == 'no' or msg_check.content == 'No':
                         embed = discord.Embed(title='Data not processed', colour=0xe91e63,description='Plz try writing the values again')
@@ -121,8 +138,8 @@ def run_discord_bot():
         channel_id = channel.id
         val = quickstart.connect_to_sheet(data.spread_id(channel_id))
         embed = discord.Embed(title='Test', description='hejsa')
-        await ctx.send(embed=embed)
-        print(val[62][21], val[62][22], val[62][23])
+        #await ctx.send(embed=embed)
+        print(val[2][0])
 
     @bot.command(name="stats_in")
     async def stats_in(ctx, id:  int, arg1: int, arg2: int, arg3: int):

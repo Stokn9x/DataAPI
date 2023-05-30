@@ -26,3 +26,35 @@ def stats_own(id):
     list = [a+str(62+id), b+str(62+id), c+str(62+id)]
 
     return list
+
+def match_stats(id):
+    a = 'B'
+    b = 'C'
+    c = 'D'
+    d = 'E'
+    e = 'F'
+    f = 'G'
+    g = 'H'
+    h = 'J'
+    j = 'K'
+    k = 'O'
+    o = 'P'
+    match_list = [a+str(3+id), b+str(3+id), c+str(3+id), d+str(3+id), e+str(3+id), f+str(3+id), g+str(3+id), h+str(3+id), j+str(3+id), k+str(3+id), o+str(3+id)]
+    return match_list
+
+
+def maps(map):
+    if map == 1:
+        return 'Ancient'
+    elif map == 2:
+        return 'Inferno'
+    elif map == 3:
+        return 'Nuke'
+    elif map == 4:
+        return 'Vertigo'
+    elif map == 5:
+        return 'Overpass'
+    elif map == 6:
+        return 'Mirage'
+    elif map == 7:
+        return 'Anubis'
