@@ -33,7 +33,7 @@ def run_discord_bot():
         val = quickstart.connect_to_sheet(data.spread_id(channel_id))
         # Send initial message
         embed = discord.Embed(title='Hi plz read the following msg', description='Here are the help commands. To help with elustrating how the command should look like. \n'
-                                                                                 'here is a eksampel. 15/05/2023 1 randoms 2 L 3-12 2-4 1 1. \n'
+                                                                                 'here is a eksampel. 15/05/2023 1 Randoms 2 L 3-12 2-4 1 1. \n'
                                                                                  'So it work be like this \n'
                                                                                  '[date] [Game_Type] [Opponets] [Map] [Win/Loss] [T-rounds] [CT-rounds] [T pistol] [CT pistol]')
         embed.add_field(name='Game type', value='1 = faceit \n 2 = scrim \n 3 = metal \n 4 = yousee \n 5 = power')
@@ -46,17 +46,16 @@ def run_discord_bot():
             i = 0
             while i == 0:
                 # Wait for the user's response
-                msg = await bot.wait_for('message', check=check, timeout=60)
+                msg = await bot.wait_for('message', check=check, timeout=200)
 
                 # Access the variables from the user's response
                 variables = msg.content.split()
 
                 if len(variables) >= 9:
                     variable1 = variables[0]
-                    variable2 = variables[1]
+                    variable2 = data.game_type(int(variables[1]))
                     variable3 = variables[2]
-                    variable4 = variables[3] # map convert
-                    variable4 = data.maps(variables[3])
+                    variable4 = data.maps(int(variables[3]))
                     variable5 = variables[4]
                     variable6 = variables[5] #
                     variable7 = variables[6] #
@@ -78,22 +77,22 @@ def run_discord_bot():
                     await ctx.send(embed=embed)
                     msg_check = await bot.wait_for('message', check=check)
                     if msg_check.content == 'yes' or msg_check.content == 'Yes':
-                        embed = discord.Embed(title='Match saved', description='The data have been processed.')
-                        await ctx.send(embed=embed)
                         x = 0
                         t = 0
                         while x == 0:
-                            if int(val[2+t][0]) != t + 1: #Dette virker ikke skal laves om
+                            if val[2+t][0] == '': #Dette virker ikke skal laves om
                                 print("hej")
-                                quickstart.write_to_sheet(data.spread_id(channel_id), 'A'+str(3+t), 3+t)
+                                quickstart.write_to_sheet(data.spread_id(channel_id), 'A'+str(3+t), 1+t)
                                 for i in range(len(match_stats)):
 
-                                    quickstart.write_to_sheet(data.spread_id(channel_id), data.match_stats(t)[i],match_stats[i])
+                                    quickstart.write_to_sheet(data.spread_id(channel_id), data.match_stats(t)[i], match_stats[i])
 
                                 x = 1
-
+                                embed = discord.Embed(title='Match saved', description=f'The data have been processed. The match id is {1+t}')
+                                await ctx.send(embed=embed)
                             else:
                                 t = t + 1
+
 
                         i = 1
                     elif msg_check.content == 'no' or msg_check.content == 'No':
@@ -121,6 +120,7 @@ def run_discord_bot():
         embed.add_field(name="!stats", value="Displays the player data")
         embed.add_field(name="!match [Match id]", value="Displays the given match")
         embed.add_field(name="!stats_in [Match id] [kills] [assist] [deaths]", value="Saves player stats to the sheet")
+        embed.add_field(name="!opret_kamp [date] [Game_Type] [Opponets] [Map] [Win/Loss] [T-rounds] [CT-rounds] [T pistol] [CT pistol]", value="Saves the data from a match. Dont type the data from the match at the same time as the command, type the command, then type the data.")
 
         await interaction.response.send_message(embed=embed)
 
