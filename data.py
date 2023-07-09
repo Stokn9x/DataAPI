@@ -25,13 +25,24 @@ def spread_id(channel_id):
         elif channel_id == 1113128230304620584: #Zengo
             return '1IRv0QicOU044COgTk0ACK__u8EjOhim3lnfRZthdlaM'
 
+        elif channel_id == 1127632407969927298: #VG Talent
+            return '1T-RTQNXdZBMzhwsJ_SRiv8nDZ4m1Kn-av1Bytq-lwp8'
+
     except:
         print("channel not working")
 
-def stats_own(id):
-    a = 'V'
-    b = 'W'
-    c = 'X'
+def stats_own(id, placeNR):
+
+    if placeNR == 1:
+        a = 'V'
+        b = 'W'
+        c = 'X'
+
+    elif placeNR == 2:
+        a = 'AB'
+        b = 'AC'
+        c = 'AD'
+
     list = [a+str(62+id), b+str(62+id), c+str(62+id)]
 
     return list

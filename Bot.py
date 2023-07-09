@@ -4,17 +4,16 @@ from dotenv import load_dotenv
 import quickstart
 import data
 import asyncio
-
+from discord import Color
 
 def run_discord_bot():
     intents = discord.Intents.default()
     intents.message_content = True
     intents.members = True
 
-    TOKEN = 'MTEwMzI3NTMzNTcxMTIwMzM4OQ.G_HaDh.oCoZbYiANChGQ_upyzZiibsRIlX8MVJ37AMaiAGG'
+    TOKEN = 'MTEwMzI3NTMzNTcxMTIwMzM4OQ.G_HaDh.oCoZbYiANChGQ_upyzZiibsRIlX8MVJ37AMaiAgg'
 
     bot = commands.Bot(command_prefix="!", intents=intents)
-
 
     @bot.event
     async def on_ready():
@@ -25,9 +24,8 @@ def run_discord_bot():
         except Exception as e:
             print(e)
 
-
     @bot.command(name='opret_kamp')
-    async def opret(ctx):
+    async def create_match(ctx):
         channel = ctx.channel
         channel_id = channel.id
         val = quickstart.connect_to_sheet(data.spread_id(channel_id))
@@ -39,6 +37,7 @@ def run_discord_bot():
         embed.add_field(name='Game type', value='1 = faceit \n 2 = scrim \n 3 = metal \n 4 = yousee \n 5 = power')
         embed.add_field(name='Map type', value='1 = Ancient \n 2 = Inferno \n 3 = Nuke \n 4 = Vertigo \n 5 = Overpass \n 6 = Mirage \n 7 = anubis')
         await ctx.send(embed=embed)
+
         def check(message):
             return message.author == ctx.author and message.channel == ctx.channel
 
@@ -57,8 +56,8 @@ def run_discord_bot():
                     variable3 = variables[2]
                     variable4 = data.maps(int(variables[3]))
                     variable5 = variables[4]
-                    variable6 = variables[5] #
-                    variable7 = variables[6] #
+                    variable6 = variables[5] #t side round
+                    variable7 = variables[6] #ct side rounds
                     variable8 = variables[7]
                     variable9 = variables[8]
 
@@ -72,8 +71,8 @@ def run_discord_bot():
                     match_stats = [variable1, variable2, variable3, variable4, variable5, variable10, variable11, variable12, variable13, variable8, variable9]
                     # Call your function using the variables
                     # your_function(variable1, variable2)
-                    embed = discord.Embed(title='Thesse are the variables i got', description=f"Variables received: {variable1}, {variable2}, {variable3}, {variable4}, {variable5}, {variable6}, {variable7}, {variable8}, {variable9} \n"
-                                                                                              f"If the valuse are correct type [yes], or if they are incorrect type [no]")
+                    embed = discord.Embed(title='These are the variables i got', description=f"Variables received: {variable1}, {variable2}, {variable3}, {variable4}, {variable5}, {variable6}, {variable7}, {variable8}, {variable9} \n"
+                                                                                              f"If the values are correct type [yes], or if they are incorrect type [no]")
                     await ctx.send(embed=embed)
                     msg_check = await bot.wait_for('message', check=check)
                     if msg_check.content == 'yes' or msg_check.content == 'Yes':
@@ -93,16 +92,14 @@ def run_discord_bot():
                             else:
                                 t = t + 1
 
-
                         i = 1
                     elif msg_check.content == 'no' or msg_check.content == 'No':
-                        embed = discord.Embed(title='Data not processed', colour=0xe91e63,description='Plz try writing the values again')
+                        embed = discord.Embed(title='Data not processed', colour=0xe91e63, description='Plz try writing the values again')
                         await ctx.send(embed=embed)
                 else:
                     await ctx.send("Please provide all of the values, before clicking enter")
         except asyncio.TimeoutError:
             await ctx.send("Timeout: Command cancelled.")
-
 
     @bot.tree.command(name='info', description='Displays all the commands you can use')
     async def info(interaction: discord.Interaction):
@@ -120,12 +117,12 @@ def run_discord_bot():
         embed.add_field(name="!stats", value="Displays the player data")
         embed.add_field(name="!match [Match id]", value="Displays the given match")
         embed.add_field(name="!stats_in [Match id] [kills] [assist] [deaths]", value="Saves player stats to the sheet")
-        embed.add_field(name="!opret_kamp [date] [Game_Type] [Opponets] [Map] [Win/Loss] [T-rounds] [CT-rounds] [T pistol] [CT pistol]", value="Saves the data from a match. Dont type the data from the match at the same time as the command, type the command, then type the data.")
+        embed.add_field(name="!opret_kamp [date] [Game_Type] [Opponents] [Map] [Win/Loss] [T-rounds] [CT-rounds] [T pistol] [CT pistol]", value="Saves the data from a match. Dont type the data from the match at the same time as the command, type the command, then type the data.")
 
         await interaction.response.send_message(embed=embed)
 
     @bot.command(name='pistol')
-    async def pistolOverall(ctx):
+    async def pistol_overall(ctx):
         channel = ctx.channel
         channel_id = channel.id
         val = quickstart.connect_to_sheet(data.spread_id(channel_id))
@@ -139,23 +136,38 @@ def run_discord_bot():
         val = quickstart.connect_to_sheet(data.spread_id(channel_id))
         embed = discord.Embed(title='Test', description='hejsa')
         #await ctx.send(embed=embed)
-        print(val[2][0])
+        print(val[59][20])
+        print(val[64][26])
 
     @bot.command(name="stats_in")
-    async def stats_in(ctx, id:  int, arg1: int, arg2: int, arg3: int):
+    async def stats_in(ctx, name: str, match_id:  int, arg1: int, arg2: int, arg3: int):
         channel = ctx.channel
         channel_id = channel.id
         val = quickstart.connect_to_sheet(data.spread_id(channel_id))
-        own_stats = [arg1,arg2,arg3]
+        own_stats = [arg1, arg2, arg3]
+        placeNr = 0
+        kor = ''
+        match = ''
+        if name == val[59][20]:
+            placeNr = 1
+            kor = 'y'
+            match = 'u'
+
+        elif name == val[59][26]:
+            placeNr = 2
+            kor = 'AE'
+            match = 'aa'
+
         try:
-            if int(val[62 + (id)][21]) != None or int(val[62 + (id)][22]) != None or int(val[62 + (id)][23]) != None:
-                embed = discord.Embed(title='Error', colour=0xe91e63,description='Some of the cells have been filled out, check if the match id is correct')
-                await ctx.send(embed=embed)
+            if val[61 + match_id][20] != None and name == val[59][20] or val[61+match_id][26] != None and name == val[59][26]:
+                error = discord.Embed(title='Error', colour=0xe91e63, description='Some of the cells have been filled out, check if the match id is correct')
+                await ctx.send(embed=error)
         except:
-            for i in range(len(data.stats_own(id))):
-                quickstart.write_to_sheet(data.spread_id(channel_id), data.stats_own(id)[i], own_stats[i])
-            quickstart.write_to_sheet(data.spread_id(channel_id), 'y'+str(62+id), int(arg1) / int(arg3))
-            embed = discord.Embed(title='Stats inputet', colour=0x2ecc71, description=f'Your stats have been saved for match [{id}] :)')
+            for i in range(len(data.stats_own(match_id, placeNr))):
+                quickstart.write_to_sheet(data.spread_id(channel_id), data.stats_own(match_id, placeNr)[i], own_stats[i])
+            quickstart.write_to_sheet(data.spread_id(channel_id), kor + str(62 + match_id), int(arg1) / int(arg3))
+            quickstart.write_to_sheet(data.spread_id(channel_id), match + str(62 + match_id), match_id)
+            embed = discord.Embed(title='Stats inputet', colour=0x2ecc71, description=f'Your stats have been saved for match {match_id} :)')
             await ctx.send(embed=embed)
 
     @bot.command(name='match')
@@ -173,7 +185,7 @@ def run_discord_bot():
                     match_status = 'Win'
                     color = 0x2ecc71
                 embed = discord.Embed(title=f'Match {arg1}', colour=color, description=f'This match was played on {val[arg1+1][1]} \n'
-                                                                         f'This match was a {val[arg1+1][2]} and was aginst {val[arg1+1][3]} \n'
+                                                                         f'This match was a {val[arg1+1][2]} and was against {val[arg1+1][3]} \n'
                                                                          f'The match was played on {val[arg1+1][4]} and it was a total {match_status} \n'
                                                                          f'The match result was {int(val[arg1+1][6]) + int(val[arg1+1][9])}-{int(val[arg1+1][7]) + int(val[arg1+1][10])} \n')
                 await ctx.send(embed=embed)
@@ -184,19 +196,29 @@ def run_discord_bot():
             embed = discord.Embed(title='Error', colour=0xe91e63, description='Some of the cells have not been filled out, plz check agian')
             await ctx.send(embed=embed)
 
-
     @bot.command(name='stats')
-    async def stats(ctx):
+    async def stats(ctx, name):
         channel = ctx.channel
         channel_id = channel.id
         val = quickstart.connect_to_sheet(data.spread_id(channel_id))
         author = ctx.author
-        embed = discord.Embed(title='Player stats', description=f'Hi, {author.mention} nu skal du bare høre hvordan du har klaret dig \n'
-                       f'Din AVG kills er [{val[36][26]}] \n'
-                       f'Din AVG aissist er [{val[37][26]}] \n'
-                       f'Din AVG deaths er [{val[38][26]}] \n'
-                       f'og din K/D er [{val[39][26]}]')
+        add = 0
+        ig = ''
+        if name == val[59][20]:
+            add = 0
+            ig = val[59][20]+"'s"
+
+        elif name == val[59][26]:
+            add = 3
+            ig = val[59][26]+"'s"
+
+        embed = discord.Embed(title='Player stats', description=f'Hi, {author.mention} This is {ig} stats from all of his matches :) \n \n'
+                       f'Your AVG kills are [{val[36][26+add]}] \n \n'
+                       f'Your AVG aissist are [{val[37][26+add]}] \n \n'
+                       f'Your AVG deaths are [{val[38][26+add]}] \n \n'
+                       f'Your din K/D are [{val[39][26+add]}]', colour=Color.purple())
         await ctx.send(embed=embed)
+
     @bot.command(name='t_pistol')
     async def pistol_t_side(ctx):
         channel = ctx.channel
@@ -213,10 +235,6 @@ def run_discord_bot():
         embed = discord.Embed(title='CT side pistol', description=f'You have won [{val[20][22]}] of your ct pistols')
         await ctx.send(embed=embed)
 
-
-    #TODO lav det om så der ikke bliver sendt 8 enkelt beskeder men som en samlet.
-
-
     @bot.command(name='map_pistol')
     async def pistol_maps(ctx):
         channel = ctx.channel
@@ -229,7 +247,7 @@ def run_discord_bot():
                         f'Vertigo Overall win% [{val[28][20]}] T side win% [{val[28][21]}] CT side win% [{val[28][22]}] \n'
                         f'Overpass Overall win% [{val[29][20]}] T side win% [{val[29][21]}] CT side win% [{val[29][22]}] \n'
                         f'Mirage Overall win% [{val[30][20]}] T side win% [{val[30][21]}] CT side win% [{val[30][22]}] \n'
-                        f'Anubis Overall win% [{val[31][20]}] T side win% [{val[31][21]}] CT side win% [{val[31 ][22]}]')
+                        f'Anubis Overall win% [{val[31][20]}] T side win% [{val[31][21]}] CT side win% [{val[31 ][22]}]', colour=Color.purple())
         await ctx.send(embed=embed)
 
     @bot.command(name='map_round')
@@ -237,14 +255,14 @@ def run_discord_bot():
         channel = ctx.channel
         channel_id = channel.id
         val = quickstart.connect_to_sheet(data.spread_id(channel_id))
-        embed = discord.Embed(title='Wins on all the maps', description=f'This is all data from your rounds on all maps\n'
-                        f'Ancient Overall win% [{val[19][26]}] T side win% [{val[19][27]}] CT side win% [{val[19][28]}] \n'
-                        f'Inferno Overall win% [{val[20][26]}] T side win% [{val[20][27]}] CT side win% [{val[20][28]}] \n'
-                        f'Nuke Overall win% [{val[21][26]}] T side win% [{val[21][27]}] CT side win% [{val[21][28]}] \n'
-                        f'Vertigo Overall win% [{val[22][26]}] T side win% [{val[22][27]}] CT side win% [{val[22][28]}] \n'
-                        f'Overpass Overall win% [{val[23][26]}] T side win% [{val[23][27]}] CT side win% [{val[23][28]}] \n'
-                        f'Mirage Overall win% [{val[24][26]}] T side win% [{val[24][27]}] CT side win% [{val[24][28]}] \n'
-                        f'Anubis Overall win% [{val[25][26]}] T side win% [{val[25][27]}] CT side win% [{val[25][28]}]')
+        embed = discord.Embed(title='Wins on all the maps', description=f'This is all data from your rounds on all maps\n \n'
+                        f'Ancient Overall win% {val[19][26]} T side win% {val[19][27]} CT side win% {val[19][28]} \n \n'
+                        f'Inferno Overall win% {val[20][26]} T side win% {val[20][27]} CT side win% {val[20][28]} \n \n'
+                        f'Nuke Overall win% {val[21][26]} T side win% {val[21][27]} CT side win% {val[21][28]} \n \n'
+                        f'Vertigo Overall win% {val[22][26]} T side win% {val[22][27]} CT side win% {val[22][28]} \n \n'
+                        f'Overpass Overall win% {val[23][26]} T side win% {val[23][27]} CT side win% {val[23][28]} \n \n'
+                        f'Mirage Overall win% {val[24][26]} T side win% {val[24][27]} CT side win% {val[24][28]} \n \n'
+                        f'Anubis Overall win% {val[25][26]} T side win% {val[25][27]} CT side win% {val[25][28]}', colour=Color.purple())
         await ctx.send(embed=embed)
 
     @bot.command(name='t_round')
@@ -279,13 +297,11 @@ def run_discord_bot():
         channel = ctx.channel
         channel_id = channel.id
         val = quickstart.connect_to_sheet(data.spread_id(channel_id))
-        embed = discord.Embed(title='Game types you played', description=f'You have played a total of [{val[37][20]}] faceit games, and u have won a total of [{val[37][21]}]\n' 
-                       f'You have played a total of [{val[38][20]}] scrim games, and u have won a total of [{val[38][21]}]\n'
-                       f'You have played a total of [{val[39][20]}] metal games, and u have won a total of [{val[39][21]}]\n'
-                       f'You have played a total of [{val[40][20]}] yousee games, and u have won a total of [{val[40][21]}]\n'
-                       f'You have played a total of [{val[41][20]}] power games, and u have won a total of [{val[41][21]}]\n')
+        embed = discord.Embed(title='Game types you played', description=f'You have played a total of [{val[37][20]}] Faceit games, and u have won a total of [{val[37][21]}]\n' 
+                       f'You have played a total of [{val[38][20]}] Scrim games, and u have won a total of [{val[38][21]}]\n'
+                       f'You have played a total of [{val[39][20]}] Metal games, and u have won a total of [{val[39][21]}]\n'
+                       f'You have played a total of [{val[40][20]}] Yousee games, and u have won a total of [{val[40][21]}]\n'
+                       f'You have played a total of [{val[41][20]}] Power games, and u have won a total of [{val[41][21]}]\n')
         await ctx.send(embed=embed)
-
-
 
     bot.run(TOKEN)
