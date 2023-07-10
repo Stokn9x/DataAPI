@@ -1,3 +1,4 @@
+import os
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -11,7 +12,9 @@ def run_discord_bot():
     intents.message_content = True
     intents.members = True
 
-    TOKEN = 'MTEwMzI3NTMzNTcxMTIwMzM4OQ.G_HaDh.oCoZbYiANChGQ_upyzZiibsRIlX8MVJ37AMaiAgg'
+    load_dotenv('.env')
+    TOKEN: str = os.getenv('Token')
+    print(TOKEN)
 
     bot = commands.Bot(command_prefix="!", intents=intents)
 
@@ -58,16 +61,16 @@ def run_discord_bot():
                     variable5 = variables[4]
                     variable6 = variables[5] #t side round
                     variable7 = variables[6] #ct side rounds
-                    variable8 = variables[7]
-                    variable9 = variables[8]
+                    variable8 = int(variables[7])
+                    variable9 = int(variables[8])
 
                     list1 = variable6.split('-')
                     list2 = variable7.split('-')
 
-                    variable10 = list1[0]
-                    variable11 = list1[1]
-                    variable12 = list2[0]
-                    variable13 = list2[1]
+                    variable10 = int(list1[0])
+                    variable11 = int(list1[1])
+                    variable12 = int(list2[0])
+                    variable13 = int(list2[1])
                     match_stats = [variable1, variable2, variable3, variable4, variable5, variable10, variable11, variable12, variable13, variable8, variable9]
                     # Call your function using the variables
                     # your_function(variable1, variable2)
@@ -114,9 +117,9 @@ def run_discord_bot():
         embed.add_field(name="!ct_round", value="Displays the overall win% of round is ct side")
         embed.add_field(name="!games", value="Displays the overall win% of your games")
         embed.add_field(name="!game_type", value="Displays the data of the game types u have played")
-        embed.add_field(name="!stats", value="Displays the player data")
+        embed.add_field(name="/stats [Name]", value="Displays the player data")
         embed.add_field(name="!match [Match id]", value="Displays the given match")
-        embed.add_field(name="!stats_in [Match id] [kills] [assist] [deaths]", value="Saves player stats to the sheet")
+        embed.add_field(name="/stats_in [Name] [Match id] [kills] [assist] [deaths]", value="Saves player stats to the sheet")
         embed.add_field(name="!opret_kamp [date] [Game_Type] [Opponents] [Map] [Win/Loss] [T-rounds] [CT-rounds] [T pistol] [CT pistol]", value="Saves the data from a match. Dont type the data from the match at the same time as the command, type the command, then type the data.")
 
         await interaction.response.send_message(embed=embed)
@@ -139,12 +142,12 @@ def run_discord_bot():
         print(val[59][20])
         print(val[64][26])
 
-    @bot.command(name="stats_in")
-    async def stats_in(ctx, name: str, match_id:  int, arg1: int, arg2: int, arg3: int):
-        channel = ctx.channel
+    @bot.tree.command(name="stats_in")
+    async def stats_in(interaction: discord.Interaction, name: str, match_id:  int, kills: int, assist: int, deaths: int):
+        channel = interaction.channel
         channel_id = channel.id
         val = quickstart.connect_to_sheet(data.spread_id(channel_id))
-        own_stats = [arg1, arg2, arg3]
+        own_stats = [kills, assist, deaths]
         placeNr = 0
         kor = ''
         match = ''
@@ -159,16 +162,16 @@ def run_discord_bot():
             match = 'aa'
 
         try:
-            if val[61 + match_id][20] != None and name == val[59][20] or val[61+match_id][26] != None and name == val[59][26]:
+            if val[62 + match_id][20] != None and name == val[59][20] or val[62 + match_id][26] != None and name == val[59][26]:
                 error = discord.Embed(title='Error', colour=0xe91e63, description='Some of the cells have been filled out, check if the match id is correct')
-                await ctx.send(embed=error)
+                await interaction.response.send_message(embed=error)
         except:
             for i in range(len(data.stats_own(match_id, placeNr))):
                 quickstart.write_to_sheet(data.spread_id(channel_id), data.stats_own(match_id, placeNr)[i], own_stats[i])
-            quickstart.write_to_sheet(data.spread_id(channel_id), kor + str(62 + match_id), int(arg1) / int(arg3))
+            quickstart.write_to_sheet(data.spread_id(channel_id), kor + str(62 + match_id), int(kills) / int(deaths))
             quickstart.write_to_sheet(data.spread_id(channel_id), match + str(62 + match_id), match_id)
             embed = discord.Embed(title='Stats inputet', colour=0x2ecc71, description=f'Your stats have been saved for match {match_id} :)')
-            await ctx.send(embed=embed)
+            await interaction.response.send_message(embed=embed)
 
     @bot.command(name='match')
     async def match_show(ctx, arg1: int):
@@ -196,12 +199,12 @@ def run_discord_bot():
             embed = discord.Embed(title='Error', colour=0xe91e63, description='Some of the cells have not been filled out, plz check agian')
             await ctx.send(embed=embed)
 
-    @bot.command(name='stats')
-    async def stats(ctx, name):
-        channel = ctx.channel
+    @bot.tree.command(name='stats')
+    async def stats(interaction: discord.Interaction, name: str):
+        channel = interaction.channel
         channel_id = channel.id
         val = quickstart.connect_to_sheet(data.spread_id(channel_id))
-        author = ctx.author
+
         add = 0
         ig = ''
         if name == val[59][20]:
@@ -212,12 +215,14 @@ def run_discord_bot():
             add = 3
             ig = val[59][26]+"'s"
 
-        embed = discord.Embed(title='Player stats', description=f'Hi, {author.mention} This is {ig} stats from all of his matches :) \n \n'
+        embed = discord.Embed(title='Player stats', description=f'Hi, {interaction.user.mention} This is {ig} stats from all of his matches :) \n \n'
                        f'Your AVG kills are [{val[36][26+add]}] \n \n'
                        f'Your AVG aissist are [{val[37][26+add]}] \n \n'
                        f'Your AVG deaths are [{val[38][26+add]}] \n \n'
                        f'Your din K/D are [{val[39][26+add]}]', colour=Color.purple())
-        await ctx.send(embed=embed)
+
+        await interaction.response.send_message(embed=embed)
+
 
     @bot.command(name='t_pistol')
     async def pistol_t_side(ctx):
