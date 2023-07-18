@@ -113,7 +113,7 @@ def run_discord_bot():
         embed.add_field(name="!map_round", value="Displays the overall win% of rounds for all the maps")
         embed.add_field(name="!t_round", value="Displays the overall win% of rounds on t side")
         embed.add_field(name="!ct_round", value="Displays the overall win% of round is ct side")
-        embed.add_field(name="!games", value="Displays the overall win% of your games")
+        embed.add_field(name="/games", value="Displays the overall win% of your games")
         embed.add_field(name="!game_type", value="Displays the data of the game types u have played")
         embed.add_field(name="/stats [Name]", value="Displays the player data")
         embed.add_field(name="/match [Match id]", value="Displays the given match")
@@ -272,16 +272,17 @@ def run_discord_bot():
         embed = discord.Embed(title='CT side rounds', description=f'This is the overall round win% for ct side[{val[29][26]}]')
         await ctx.send(embed=embed)
 
-    @bot.command(name='games')
-    async def game(ctx):
-        channel = ctx.channel
+    @bot.tree.command(name='games')
+    async def game(interaction: discord.Interaction):
+        channel = interaction.channel
         channel_id = channel.id
         val = quickstart.connect_to_sheet(data.spread_id(channel_id))
         embed = discord.Embed(title='Overall games', description=f'You have played a total of [{val[26][31]}] games \n'
                         f'You have won a total of [{val[26][32]}] games \n'
                         f'You have lost a total of [{val[26][33]}] games \n'
                         f'You have a  win to loss ration of [{val[26][34]}]')
-        await ctx.send(embed=embed)
+
+        await interaction.response.send_message(embed=embed)
 
     @bot.command(name='game_type')
     async def game_type(ctx):
