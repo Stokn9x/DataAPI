@@ -108,6 +108,7 @@ def run_discord_bot():
             await ctx.send("Timeout: Command cancelled.")
 
     @bot.tree.command(name='delete') #Der skal laves et fix hos stats'ne så faktisk alle statsne bliver slettet når denne command bruges.
+
     async def delete(interaction: discord.Interaction, match_id: int):
         channel = interaction.channel
         channel_id = channel.id
