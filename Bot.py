@@ -27,6 +27,9 @@ def run_discord_bot():
         except Exception as e:
             print(e)
 
+
+
+
     @bot.command(name='opret_kamp')
     async def create_match(ctx):
         channel = ctx.channel
@@ -71,7 +74,7 @@ def run_discord_bot():
                     variable11 = int(list1[1])
                     variable12 = int(list2[0])
                     variable13 = int(list2[1])
-                    match_stats = [variable1, variable2, variable3, variable4, variable5, variable10, variable11, variable12, variable13, variable8, variable9]
+                    match_variables = [variable1, variable2, variable3, variable4, variable5, variable10, variable11, variable12, variable13, variable8, variable9]
                     # Call your function using the variables
                     # your_function(variable1, variable2)
                     embed = discord.Embed(title='These are the variables i got', description=f"Variables received: {variable1}, {variable2}, {variable3}, {variable4}, {variable5}, {variable6}, {variable7}, {variable8}, {variable9} \n"
@@ -82,12 +85,12 @@ def run_discord_bot():
                         x = 0
                         t = 0
                         while x == 0:
-                            if val[2+t][0] == '': #Dette virker ikke skal laves om
+                            if val[2+t][0] == '' or val[2+t][0] == 'N/A':
                                 print("hej")
                                 quickstart.write_to_sheet(data.spread_id(channel_id), 'A'+str(3+t), 1+t)
-                                for i in range(len(match_stats)):
+                                for i in range(len(match_variables)):
 
-                                    quickstart.write_to_sheet(data.spread_id(channel_id), data.match_stats(t)[i], match_stats[i])
+                                    quickstart.write_to_sheet(data.spread_id(channel_id), data.match_stats(t)[i], match_variables[i])
 
                                 x = 1
                                 embed = discord.Embed(title='Match saved', description=f'The data have been processed. The match id is {1+t}')
@@ -103,6 +106,26 @@ def run_discord_bot():
                     await ctx.send("Please provide all of the values, before clicking enter")
         except asyncio.TimeoutError:
             await ctx.send("Timeout: Command cancelled.")
+
+    @bot.tree.command(name='delete') #Der skal laves et fix hos stats'ne så faktisk alle statsne bliver slettet når denne command bruges.
+    async def delete(interaction: discord.Interaction, match_id: int):
+        channel = interaction.channel
+        channel_id = channel.id
+        val = quickstart.connect_to_sheet(data.spread_id(channel_id))
+
+        try:
+            for i in range(match_id):
+                if match_id == int(val[2+i][0]):
+                    print("hej")
+
+                    quickstart.write_to_sheet(data.spread_id(channel_id), 'A' + str(3 + match_id-1), 'N/A')
+                    for i in range(11):
+                        quickstart.write_to_sheet(data.spread_id(channel_id), data.match_stats(match_id-1)[i], 0)
+
+        except:
+            print("lort")
+
+
 
     @bot.tree.command(name='info', description='Displays all the commands you can use')
     async def info(interaction: discord.Interaction):
@@ -142,8 +165,7 @@ def run_discord_bot():
         val = quickstart.connect_to_sheet(data.spread_id(channel_id))
         embed = discord.Embed(title='Test', description='hejsa')
         #await ctx.send(embed=embed)
-        print(val[59][20])
-        print(val[64][26])
+        print(val[2][0])
 
     @bot.tree.command(name="stats_in")
     async def stats_in(interaction: discord.Interaction, name: str, match_id:  int, kills: int, assist: int, deaths: int):

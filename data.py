@@ -59,7 +59,7 @@ def match_stats(id):
     j = 'K'
     k = 'O'
     o = 'P'
-    match_list = [a+str(3+id), b+str(3+id), c+str(3+id), d+str(3+id), e+str(3+id), f+str(3+id), g+str(3+id), h+str(3+id), j+str(3+id), k+str(3+id), o+str(3+id)]
+    match_list = [a+str(3+id), b+str(3+id), c+str(3+id), d+str(3+id), e+str(3+id), f+str(3+id), g+str(3+id), h+str(3+id), j+str(3+id), k+str(3+id), o+str(3+id)] #Den blir sat med +3 da id'et vil altid starte på nul, så id 4 vil være 3 her.
     return match_list
 
 
