@@ -115,13 +115,28 @@ def run_discord_bot():
         val = quickstart.connect_to_sheet(data.spread_id(channel_id))
 
         try:
-            for i in range(match_id):
-                if match_id == int(val[2+i][0]):
-                    print("hej")
+            #for i in range(match_id):
+             #   if match_id == int(val[2+i][0]):
+             #       print("hej")
 
-                    quickstart.write_to_sheet(data.spread_id(channel_id), 'A' + str(3 + match_id-1), 'N/A')
-                    for i in range(11):
-                        quickstart.write_to_sheet(data.spread_id(channel_id), data.match_stats(match_id-1)[i], 0)
+              #      quickstart.write_to_sheet(data.spread_id(channel_id), 'A' + str(3 + match_id-1), 'N/A')
+              #      for i in range(11):
+              #          quickstart.write_to_sheet(data.spread_id(channel_id), data.match_stats(match_id-1)[i], 0)
+            y = 0
+            check_IfNot_NA = True # Denne delete er ikke optimal da den pt kun vil kunne flytte en linje under den slettede linje. Samt tager den ikke højde for hvis der ikke er nogen under den. Så fix det
+            while(check_IfNot_NA == True): #Ja Kasper ved godt lortet ikke virker endnu, jeg er træt og klokken er 00:30 og jeg vil sove.
+                if (int(val[2+y][0]) == match_id):
+                    if (int(val[2+y+1][0]) == match_id+1):
+                        quickstart.write_to_sheet(data.spread_id(channel_id), 'A' + str(match_id), int(val[2+y+1][0])-1)
+                        for i in range(11):
+                            quickstart.write_to_sheet(data.spread_id(channel_id), data.match_stats(match_id)[i], val[2+y+1][i]) # Den er ikke kalibrede ordenligt i forhold til den data der skal flyttes
+
+                        quickstart.write_to_sheet(data.spread_id(channel_id), 'A' + str(2+y+1), 'N/A')
+                        for i in range(11):
+                            quickstart.write_to_sheet(data.spread_id(channel_id), data.match_stats(2+y+1)[i], 0)
+                    check_IfNot_NA = False
+
+                y = y + 1
 
         except:
             print("lort")
