@@ -202,6 +202,21 @@ def run_discord_bot():
             kor = 'AE'
             match = 'aa'
 
+        elif name == val[59][32]:
+            placeNr = 3
+            kor = 'AK'
+            match = 'ag'
+
+        elif name == val[59][38]:
+            placeNr = 4
+            kor = 'AQ'
+            match = 'am'
+
+        elif name == val[59][44]:
+            placeNr = 5
+            kor = 'AW'
+            match = 'as'
+
         try:
             if val[62 + match_id][20] != None and name == val[59][20] or val[62 + match_id][26] != None and name == val[59][26]:
                 error = discord.Embed(title='Error', colour=0xe91e63, description='Some of the cells have been filled out, check if the match id is correct')
@@ -255,6 +270,18 @@ def run_discord_bot():
         elif name == val[59][26]:
             add = 3
             ig = val[59][26]+"'s"
+
+        elif name == val[59][32]:
+            add = 6
+            ig = val[59][32]+"'s"
+
+        elif name == val[59][38]:
+            add = 9
+            ig = val[59][38]+"'s"
+
+        elif name == val[59][44]:
+            add = 12
+            ig = val[59][44]+"'s"
 
         embed = discord.Embed(title='Player stats', description=f'Hi, {interaction.user.mention} This is {ig} stats from all of his matches :) \n \n'
                        f'Your AVG kills are [{val[36][26+add]}] \n \n'
